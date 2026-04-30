@@ -21,23 +21,6 @@ export const RESTAURANT_ID = "gosto_food";
 const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const db: Firestore = getFirestore(app);
 
-if (typeof window !== "undefined") {
-  (window as unknown as Record<string, unknown>).__gostoTest = async () => {
-    try {
-      const ref = await addDoc(collection(db, "orders"), {
-        test: true,
-        time: new Date(),
-        restaurantId: RESTAURANT_ID,
-      });
-      console.log("✅ WRITE SUCCESS — doc id:", ref.id);
-      return ref.id;
-    } catch (err) {
-      console.error("❌ ERROR:", err);
-      throw err;
-    }
-  };
-}
-
 export interface OrderItemPayload {
   group: string;
   name: string;
