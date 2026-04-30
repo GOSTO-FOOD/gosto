@@ -1,0 +1,229 @@
+Our Menu
+bateaux
+bateaux
+poulet
+500 DA
+Add
+mix
+600 DA
+Add
+viande
+600 DA
+Add
+souflet
+souflet
+poulet
+500 DA
+Add
+kebda
+600 DA
+Add
+viande
+600 DA
+Add
+boisson
+farha (33cl, 1L)
+50, 100 DA
+Add
+hamoud (33cl, 1L)
+60, 120 DA
+Add
+jus 33cl
+70 DA
+Add
+coca
+150 DA
+Add
+matloua
+matloua
+poulet
+300 DA
+Add
+kebda
+400 DA
+Add
+americain
+americain
+normal
+600 DA
+Add
+burger
+burger
+chicken
+250 DA
+Add
+viande
+300 DA
+Add
+double
+500 DA
+Add
+gratin
+gratin
+poulet (M, L, XL)
+350, 450, 600 DA
+Add
+MIX (M, L, XL)
+450, 550, 700 DA
+Add
+viande (M, L, XL)
+450, 550, 700 DA
+Add
+pizza
+pizza
+Marguerite (L, XL, XXL)
+250, 500, 700 DA
+Add
+2 fromage (L, XL, XXL)
+350, 700, 1000 DA
+Add
+vegetarienne (L, XL, XXL)
+400, 800, 1100 DA
+Add
+champignon (L, XL, XXL)
+450, 900, 1200 DA
+Add
+viande (L, XL, XXL)
+500, 1000, 1400 DA
+Add
+thon (L, XL, XXL)
+500, 1000, 1400 DA
+Add
+panachi (L, XL, XXL)
+500, 1000, 1400 DA
+Add
+poulet (L, XL, XXL)
+500, 1000, 1400 DA
+Add
+3 fromage (L, XL, XXL)
+600, 1200, 1700 DA
+Add
+poulet boisé (L, XL, XXL)
+600, 1100, 1600 DA
+Add
+3 season (L, XL, XXL)
+600, 1200, 1600 DA
+Add
+4 season (الفصول الاربعة) (L, XL, XXL)
+750, 1500, 2000 DA
+Add
+surprise (L, XL, XXL)
+750, 1500, 2000 DA
+Add
+4 fromage (L, XL, XXL)
+800, 1600, 2200 DA
+Add
+5 fromage (L, XL, XXL)
+900, 1800, 2500 DA
+Add
+gosto (L, XL, XXL)
+950, 1900, 2400 DA
+Add
+chawarma
+chawarma
+arabi
+500 DA
+Add
+tacos
+tacos
+normal (P, G)
+400, 800 DA
+Add
+gratiné (P, G)
+500, 1000 DA
+Add
+camembert (P, G)
+550, 1100 DA
+Add
+3 fromage (P, G)
+550, 1100 DA
+Add
+gratiné + (P, G)
+550, 1100 DA
+Add
+grisele (P, G)
+550, 1100 DA
+Add
+royale (P, G)
+600, 1100 DA
+Add
+3 fromage + (P, G)
+600, 1200 DA
+Add
+king (P, G)
+700, 1300 DA
+Add
+tramway
+1600 DA
+Add
+calzone
+calzone
+poulet
+700 DA
+Add
+mix
+800 DA
+Add
+viande
+800 DA
+Add
+4 fromage
+850 DA
+Add
+makloub
+makloub
+poulet
+400 DA
+Add
+thon
+500 DA
+Add
+viande
+500 DA
+Add
+kebda
+500 DA
+Add
+mix
+500 DA
+Add
+mexicain
+mexicain
+mexicain
+500 DA
+Add
+melfouf
+melfouf
+chawarma
+300 DA
+Add
+poulet
+300 DA
+Add
+kebda
+400 DA
+Add
+BOX
+box50
+500 DA
+Add
+box100
+1000 DA
+Add
+chees cake
+chees cake
+chocolat (قطعة صغيرة, قطعة كبيرة )
+250, 450 DA
+Add
+snickers (قطعة صغيرة, قطعة كبيرة)
+250, 450 DA
+Add
+lotis (قطعة صغيرة, قطعة كبيرة)
+250, 450 DA
+Add
+fromboise (قطعة صغيرة, قطعة كبيرة)
+250, 450 DA
+Add
+pistach
+300 DA
+Add

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, Phone, MapPin, Send, CheckCircle, Loader2 } from "lucide-react";
+import { X, User, Phone, MapPin, Send, CheckCircle, Loader2, Clock } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { submitOrder } from "@/lib/firebase";
+import { useOpenStatus } from "@/lib/workingHours";
 
 export default function Checkout() {
   const { items, total, clearCart, isCheckoutOpen, closeCheckout, openCart } = useCart();
+  const status = useOpenStatus();
   const [form, setForm] = useState({ name: "", phone: "", address: "", details: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -23,6 +25,14 @@ export default function Checkout() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!status.isOpen) {
+      setSubmitError(
+        status.nextOpenLabel
+          ? `Le restaurant est fermé. Réouverture: ${status.nextOpenLabel}.`
+          : "Le restaurant est fermé pour le moment."
+      );
+      return;
+    }
     if (!validate() || sending) return;
 
     setSending(true);
@@ -157,6 +167,33 @@ export default function Checkout() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="px-7 pb-7 flex flex-col gap-5">
+                    {!status.isOpen && (
+                      <div
+                        className="flex items-start gap-3 px-4 py-3.5"
+                        style={{
+                          background: "rgba(255,80,80,0.08)",
+                          border: "1px solid rgba(255,80,80,0.4)",
+                          clipPath:
+                            "polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px)",
+                        }}
+                      >
+                        <Clock size={18} className="text-red-300 flex-shrink-0 mt-0.5" />
+                        <div className="flex flex-col gap-0.5">
+                          <p className="text-sm font-black text-red-300 uppercase tracking-wider">
+                            Restaurant fermé
+                          </p>
+                          <p className="text-xs text-white/60 leading-relaxed">
+                            {status.nextOpenLabel
+                              ? `Réouverture: ${status.nextOpenLabel}.`
+                              : "Les commandes sont indisponibles pour le moment."}
+                          </p>
+                          <p className="text-[10px] text-white/40 mt-1">
+                            Sam — Jeu : 10:00 – 15:00 / 17:00 – 22:00
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Order Summary */}
                     <div
                       className="cut-sm p-4 flex flex-col gap-2.5 max-h-44 overflow-y-auto"
@@ -247,17 +284,26 @@ export default function Checkout() {
                     <div className="flex flex-col gap-3 mt-2">
                       <button
                         type="submit"
-                        disabled={sending}
+                        disabled={sending || !status.isOpen}
                         className="flex items-center justify-center gap-3 w-full py-4 sharp font-display font-black text-white text-base uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                         style={{
-                          background: "linear-gradient(135deg, #FF7A00, #FF4500)",
-                          boxShadow: "0 0 30px rgba(255,122,0,0.45), 0 8px 24px rgba(255,69,0,0.25)",
+                          background: status.isOpen
+                            ? "linear-gradient(135deg, #FF7A00, #FF4500)"
+                            : "linear-gradient(135deg, #555, #333)",
+                          boxShadow: status.isOpen
+                            ? "0 0 30px rgba(255,122,0,0.45), 0 8px 24px rgba(255,69,0,0.25)"
+                            : "none",
                         }}
                       >
                         {sending ? (
                           <>
                             <Loader2 size={20} className="animate-spin" />
                             Envoi en cours...
+                          </>
+                        ) : !status.isOpen ? (
+                          <>
+                            <Clock size={20} />
+                            Fermé — Indisponible
                           </>
                         ) : (
                           <>

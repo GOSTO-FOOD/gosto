@@ -1,5 +1,6 @@
-import { Facebook, Instagram, Phone, MapPin, ChevronRight, UtensilsCrossed } from "lucide-react";
+import { Facebook, Instagram, Phone, MapPin, ChevronRight, UtensilsCrossed, Clock } from "lucide-react";
 import mascotLogo from "@assets/téléchargement_(2)_1777233502629.png";
+import { useOpenStatus } from "@/lib/workingHours";
 
 function TikTokIcon({ size = 18 }: { size?: number }) {
   return (
@@ -12,6 +13,7 @@ function TikTokIcon({ size = 18 }: { size?: number }) {
 const quickLinks = ["Menu", "Offres", "À Propos", "Contact"];
 
 export default function Footer() {
+  const status = useOpenStatus();
   const scrollTo = (id: string) => {
     const el = document.getElementById(id.toLowerCase().replace("à propos", "about").replace("offres", "offers").replace("menu", "menu").replace("contact", "contact"));
     if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
@@ -157,6 +159,40 @@ export default function Footer() {
                 <div className="flex flex-col gap-0.5">
                   <span className="text-sm text-white/50">0656 92 39 63</span>
                   <span className="text-sm text-white/50">0552 41 40 55</span>
+                </div>
+              </div>
+              <div
+                className="flex items-start gap-3 px-4 py-3 cut-sm"
+                style={{
+                  background: status.isOpen
+                    ? "rgba(57,255,20,0.06)"
+                    : "rgba(255,80,80,0.06)",
+                  border: status.isOpen
+                    ? "1px solid rgba(57,255,20,0.25)"
+                    : "1px solid rgba(255,80,80,0.25)",
+                }}
+              >
+                <Clock
+                  size={16}
+                  style={{
+                    color: status.isOpen ? "#39FF14" : "#ff5050",
+                    flexShrink: 0,
+                    marginTop: 2,
+                  }}
+                />
+                <div className="flex flex-col gap-0.5">
+                  <span
+                    className="text-[10px] font-black uppercase tracking-widest"
+                    style={{ color: status.isOpen ? "#39FF14" : "#ff5050" }}
+                  >
+                    {status.isOpen ? "● Ouvert maintenant" : "● Fermé"}
+                  </span>
+                  <span className="text-sm text-white/50 leading-snug">
+                    Sam — Jeu&nbsp;: 10:00 – 15:00
+                    <br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; / 17:00 – 22:00
+                  </span>
+                  <span className="text-xs text-white/30">Vendredi&nbsp;: Fermé</span>
                 </div>
               </div>
             </div>
