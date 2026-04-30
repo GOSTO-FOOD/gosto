@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   UtensilsCrossed, Flame, Layers, ScrollText, Zap, Package,
@@ -135,6 +135,17 @@ export default function MenuShowcase() {
   const [activeId, setActiveId] = useState(menuData[0].id);
   const activeCategory = menuData.find((c) => c.id === activeId) ?? menuData[0];
   const Icon = iconMap[activeCategory.icon] ?? UtensilsCrossed;
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const id = (e as CustomEvent<string>).detail;
+      if (typeof id === "string" && menuData.some((c) => c.id === id)) {
+        setActiveId(id);
+      }
+    };
+    window.addEventListener("gosto:open-category", handler);
+    return () => window.removeEventListener("gosto:open-category", handler);
+  }, []);
 
   return (
     <section id="menu" className="py-24 relative bg-background overflow-hidden">
