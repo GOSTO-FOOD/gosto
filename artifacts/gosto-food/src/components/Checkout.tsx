@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, Phone, MapPin, MessageCircle, CheckCircle } from "lucide-react";
+import { X, User, Phone, MapPin, Send, CheckCircle, Loader2 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { submitOrder } from "@/lib/firebase";
 
 export default function Checkout() {
   const { items, total, clearCart, isCheckoutOpen, closeCheckout, openCart } = useCart();
-  const [form, setForm] = useState({ name: "", phone: "", address: "" });
+  const [form, setForm] = useState({ name: "", phone: "", address: "", details: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
@@ -18,41 +21,46 @@ export default function Checkout() {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate() || sending) return;
 
-    const orderLines = items
-      .map(
-        (i) =>
-          `• ${i.name}${i.size ? ` (${i.size})` : ""} ×${i.quantity} = ${(i.price * i.quantity).toLocaleString()} DA`
-      )
-      .join("\n");
+    setSending(true);
+    setSubmitError(null);
 
-    const message = [
-      "🍕 *NOUVELLE COMMANDE — GOSTO FOOD* 🍕",
-      "━━━━━━━━━━━━━━━━━━━━━",
-      `👤 *Nom:* ${form.name}`,
-      `📞 *Téléphone:* ${form.phone}`,
-      `📍 *Adresse:* ${form.address}`,
-      "━━━━━━━━━━━━━━━━━━━━━",
-      "*🛒 Articles commandés:*",
-      orderLines,
-      "━━━━━━━━━━━━━━━━━━━━━",
-      `💰 *TOTAL: ${total.toLocaleString()} DA*`,
-    ].join("\n");
+    try {
+      await submitOrder({
+        clientName: form.name.trim(),
+        clientPhone: form.phone.trim(),
+        clientAddress: form.address.trim(),
+        details: form.details.trim(),
+        total,
+        items: items.map((i) => ({
+          group: i.category,
+          name: i.name,
+          size: i.size ?? null,
+          price: i.price,
+          qty: i.quantity,
+        })),
+      });
 
-    const url = `https://wa.me/213656923963?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
-    setSent(true);
+      setSent(true);
 
-    setTimeout(() => {
-      clearCart();
-      closeCheckout();
-      setSent(false);
-      setForm({ name: "", phone: "", address: "" });
-      setErrors({});
-    }, 3000);
+      setTimeout(() => {
+        clearCart();
+        closeCheckout();
+        setSent(false);
+        setForm({ name: "", phone: "", address: "", details: "" });
+        setErrors({});
+      }, 3500);
+    } catch (err) {
+      console.error("Failed to submit order:", err);
+      setSubmitError(
+        "Impossible d'envoyer la commande. Vérifiez votre connexion et réessayez."
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleClose = () => {
@@ -68,6 +76,7 @@ export default function Checkout() {
     { icon: User, key: "name", label: "Nom complet", placeholder: "Ex: Ahmed Benali", type: "text" },
     { icon: Phone, key: "phone", label: "Téléphone", placeholder: "Ex: 0656 92 39 63", type: "tel" },
     { icon: MapPin, key: "address", label: "Adresse de livraison", placeholder: "Rue, quartier, ville...", type: "text" },
+    { icon: User, key: "details", label: "Détails (optionnel)", placeholder: "Ex: Sans oignons, étage 2...", type: "text" },
   ] as const;
 
   return (
@@ -140,7 +149,7 @@ export default function Checkout() {
                     </motion.div>
                     <h3 className="font-bebas text-4xl text-white">Commande Envoyée!</h3>
                     <p className="text-white/50 text-sm max-w-xs leading-relaxed">
-                      Votre commande a été envoyée sur WhatsApp. Notre équipe vous contactera dans les plus brefs délais.
+                      Votre commande a été reçue par notre équipe. Nous vous contacterons dans les plus brefs délais pour confirmer la livraison.
                     </p>
                     <div className="flex items-center gap-2 text-xs text-white/30 font-bold uppercase tracking-wider">
                       <span>Fermeture automatique...</span>
@@ -223,23 +232,46 @@ export default function Checkout() {
                       );
                     })}
 
+                    {submitError && (
+                      <div
+                        className="px-4 py-3 text-sm font-medium text-red-300"
+                        style={{
+                          background: "rgba(255,80,80,0.08)",
+                          border: "1px solid rgba(255,80,80,0.35)",
+                        }}
+                      >
+                        {submitError}
+                      </div>
+                    )}
+
                     <div className="flex flex-col gap-3 mt-2">
                       <button
                         type="submit"
-                        className="flex items-center justify-center gap-3 w-full py-4 sharp font-display font-black text-white text-base uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        disabled={sending}
+                        className="flex items-center justify-center gap-3 w-full py-4 sharp font-display font-black text-white text-base uppercase tracking-widest transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                         style={{
-                          background: "linear-gradient(135deg, #25D366, #128C7E)",
-                          boxShadow: "0 0 30px rgba(37,211,102,0.35), 0 8px 24px rgba(18,140,126,0.3)",
+                          background: "linear-gradient(135deg, #FF7A00, #FF4500)",
+                          boxShadow: "0 0 30px rgba(255,122,0,0.45), 0 8px 24px rgba(255,69,0,0.25)",
                         }}
                       >
-                        <MessageCircle size={20} />
-                        Envoyer sur WhatsApp
+                        {sending ? (
+                          <>
+                            <Loader2 size={20} className="animate-spin" />
+                            Envoi en cours...
+                          </>
+                        ) : (
+                          <>
+                            <Send size={20} />
+                            Envoyer la Commande
+                          </>
+                        )}
                       </button>
 
                       <button
                         type="button"
                         onClick={handleBack}
-                        className="w-full py-3 sharp font-bold text-sm uppercase tracking-wider text-white/40 hover:text-white/70 transition-all"
+                        disabled={sending}
+                        className="w-full py-3 sharp font-bold text-sm uppercase tracking-wider text-white/40 hover:text-white/70 transition-all disabled:opacity-50"
                         style={{ border: "1px solid rgba(255,255,255,0.06)" }}
                       >
                         ← Retour au panier
