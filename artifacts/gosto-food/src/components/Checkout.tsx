@@ -8,7 +8,7 @@ import { useOpenStatus } from "@/lib/workingHours";
 export default function Checkout() {
   const { items, total, clearCart, isCheckoutOpen, closeCheckout, openCart } = useCart();
   const status = useOpenStatus();
-  const [form, setForm] = useState({ name: "", phone: "", address: "", details: "" });
+  const [form, setForm] = useState({ name: "", phone: "", address: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -43,7 +43,6 @@ export default function Checkout() {
         clientName: form.name.trim(),
         clientPhone: form.phone.trim(),
         clientAddress: form.address.trim(),
-        details: form.details.trim(),
         total,
         items: items.map((i) => ({
           group: i.category,
@@ -60,7 +59,7 @@ export default function Checkout() {
         clearCart();
         closeCheckout();
         setSent(false);
-        setForm({ name: "", phone: "", address: "", details: "" });
+        setForm({ name: "", phone: "", address: "" });
         setErrors({});
       }, 3500);
     } catch (err) {
@@ -86,7 +85,6 @@ export default function Checkout() {
     { icon: User, key: "name", label: "Nom complet", placeholder: "Ex: Ahmed Benali", type: "text" },
     { icon: Phone, key: "phone", label: "Téléphone", placeholder: "Ex: 0656 92 39 63", type: "tel" },
     { icon: MapPin, key: "address", label: "Adresse de livraison", placeholder: "Rue, quartier, ville...", type: "text" },
-    { icon: User, key: "details", label: "Détails (optionnel)", placeholder: "Ex: Sans oignons, étage 2...", type: "text" },
   ] as const;
 
   return (
