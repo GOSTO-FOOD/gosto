@@ -2,13 +2,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   UtensilsCrossed, Flame, Layers, ScrollText, Zap, Package,
-  CupSoda, Ship, Plus, Star, ChefHat,
+  CupSoda, Ship, Plus, Star, ChefHat, Beef, Cake, Pizza,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { menuData, type MenuItem, type MenuCategory } from "@/data/menuData";
 
 const iconMap: Record<string, React.ElementType> = {
-  pizza: UtensilsCrossed,
+  pizza: Pizza,
   layers: Layers,
   ship: Ship,
   flame: Flame,
@@ -17,6 +17,8 @@ const iconMap: Record<string, React.ElementType> = {
   zap: Zap,
   package: Package,
   cup: CupSoda,
+  burger: Beef,
+  cake: Cake,
 };
 
 function ItemCard({ item, category }: { item: MenuItem; category: MenuCategory }) {
