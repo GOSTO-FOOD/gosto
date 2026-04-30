@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { CartProvider, useCart } from "@/context/CartContext";
+import { CartProvider } from "@/context/CartContext";
 import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -10,34 +10,6 @@ import AboutBrand from "@/components/AboutBrand";
 import Footer from "@/components/Footer";
 import Cart from "@/components/Cart";
 import Checkout from "@/components/Checkout";
-import { ShoppingBag } from "lucide-react";
-
-function MobileCartFAB() {
-  const { count, openCart } = useCart();
-  return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 z-50 glass-dark border-t border-white/10">
-      <button
-        onClick={openCart}
-        className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-display font-black text-white text-lg uppercase tracking-widest relative"
-        style={{
-          background: "linear-gradient(135deg, #FF7A00, #FF4500)",
-          boxShadow: "0 0 24px rgba(255,122,0,0.6)",
-        }}
-      >
-        <ShoppingBag size={22} />
-        {count > 0 ? `Panier (${count})` : "Commander Maintenant"}
-        {count > 0 && (
-          <span
-            className="absolute top-2 right-4 w-6 h-6 rounded-full flex items-center justify-center text-xs font-black text-black"
-            style={{ background: "#fff" }}
-          >
-            {count}
-          </span>
-        )}
-      </button>
-    </div>
-  );
-}
 
 function AppContent() {
   const [loaded, setLoaded] = useState(false);
@@ -86,7 +58,6 @@ function AppContent() {
           <AboutBrand />
         </main>
         <Footer />
-        <MobileCartFAB />
       </div>
 
       {/* Cart drawer + Checkout modal (outside page scroll) */}
