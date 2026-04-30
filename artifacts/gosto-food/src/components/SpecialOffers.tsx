@@ -1,45 +1,31 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Timer, Percent, Zap, TrendingUp, ArrowRight, Tag, Check } from "lucide-react";
+import { Timer, Zap, TrendingUp, ArrowRight, Tag, Check } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 const offers = [
   {
-    id: "offer-pizza-family",
-    title: "Pizza Family Deal",
-    badge: { label: "−30%", icon: Percent },
-    oldPrice: "4500 DA",
-    newPrice: "3200 DA",
-    priceNum: 3200,
-    description: "2 Pizzas Mega + 1 Boisson 1.5L + Frites Familiales",
+    id: "bx-50",
+    title: "BOX 50",
+    badge: { label: "OFFRE DU JOUR", icon: Zap },
+    newPrice: "500 DA",
+    priceNum: 500,
+    description: "Coffret GOSTO — format individuel",
     accent: "#FF7A00",
     glow: "rgba(255,122,0,0.35)",
     pulse: true,
   },
   {
-    id: "offer-combo-tacos",
-    title: "Combo Tacos x2",
-    badge: { label: "OFFRE DU JOUR", icon: Zap },
-    oldPrice: "1800 DA",
-    newPrice: "1400 DA",
-    priceNum: 1400,
-    description: "2 Tacos au choix + 2 Boissons 33cl",
+    id: "bx-100",
+    title: "BOX 100",
+    badge: { label: "BEST SELLER", icon: TrendingUp },
+    newPrice: "1000 DA",
+    priceNum: 1000,
+    description: "Coffret GOSTO — format familial",
     accent: "#39FF14",
     glow: "rgba(57,255,20,0.3)",
     pulse: true,
     featured: true,
-  },
-  {
-    id: "offer-sandwich-boisson",
-    title: "Sandwich + Boisson",
-    badge: { label: "BEST SELLER", icon: TrendingUp },
-    oldPrice: "850 DA",
-    newPrice: "650 DA",
-    priceNum: 650,
-    description: "1 Sandwich au choix + Frites + Boisson",
-    accent: "#FFD700",
-    glow: "rgba(255,215,0,0.3)",
-    pulse: false,
   },
 ];
 
@@ -52,7 +38,7 @@ export default function SpecialOffers() {
     addItem({
       id: offer.id,
       name: offer.title,
-      category: "Offres Spéciales",
+      category: "Box",
       price: offer.priceNum,
     });
     setAdded(offer.id);
@@ -148,7 +134,7 @@ export default function SpecialOffers() {
         </motion.div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {offers.map((offer, i) => {
             const BadgeIcon = offer.badge.icon;
             return (
@@ -219,9 +205,6 @@ export default function SpecialOffers() {
                     style={{ color: offer.accent, filter: `drop-shadow(0 0 10px ${offer.accent})` }}
                   >
                     {offer.newPrice}
-                  </span>
-                  <span className="font-bold text-lg text-white/25 line-through mb-1">
-                    {offer.oldPrice}
                   </span>
                 </div>
 
