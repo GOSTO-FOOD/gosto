@@ -209,6 +209,38 @@ export default function Footer() {
             Fast. Bold. Unforgettable.
           </p>
         </div>
+
+        {/* Developed by credit */}
+        <div className="pt-4 mt-2 flex items-center justify-center">
+          <a
+            href="https://www.instagram.com/ra2d_420i/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 px-3 py-1.5 transition-all"
+            style={{
+              border: "1px solid rgba(255,122,0,0.15)",
+              clipPath: "polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%)",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,122,0,0.5)";
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 0 14px rgba(255,122,0,0.25)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,122,0,0.15)";
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none";
+            }}
+          >
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/30 group-hover:text-white/50 transition-colors">
+              Developed by
+            </span>
+            <span
+              className="text-[11px] font-black tracking-wider transition-all"
+              style={{ color: "#FF7A00", filter: "drop-shadow(0 0 4px rgba(255,122,0,0.5))" }}
+            >
+              @ra2d_420i
+            </span>
+          </a>
+        </div>
       </div>
     </footer>
   );
