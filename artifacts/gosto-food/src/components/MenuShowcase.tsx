@@ -184,7 +184,7 @@ export default function MenuShowcase() {
               backgroundClip: "text",
             }}
           >
-            La Carte
+            MENU
           </h2>
         </motion.div>
 
