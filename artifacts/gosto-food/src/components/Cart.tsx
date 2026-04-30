@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, Trash2, ShoppingBag, ChevronRight, Zap } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import CartSuggestions from "./CartSuggestions";
 
 export default function Cart() {
   const { items, removeItem, updateQty, total, count, isOpen, closeCart, openCheckout } = useCart();
@@ -278,6 +279,9 @@ export default function Cart() {
                 </AnimatePresence>
               )}
             </div>
+
+            {/* ── SUGGESTIONS ── */}
+            <CartSuggestions />
 
             {/* ── FOOTER ── */}
             {items.length > 0 && (
