@@ -8,8 +8,8 @@ const dishes = [
     id: "sig-super-pizza",
     name: "Pizza Gosto",
     subtitle: "XXL Signature",
-    price: "2500 DA",
-    priceNum: 2500,
+    price: "2400 DA",
+    priceNum: 2400,
     description:
       "XXL géante garnie généreusement avec double fromage fondu, viande hachée spéciale et sauce secrète Gosto.",
     badge: { label: "Populaire", icon: TrendingUp },
