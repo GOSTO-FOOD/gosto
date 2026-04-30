@@ -6,7 +6,7 @@ import { useCart } from "@/context/CartContext";
 const dishes = [
   {
     id: "sig-super-pizza",
-    name: "La Super Pizza",
+    name: "Pizza Gosto",
     subtitle: "XXL Signature",
     price: "2500 DA",
     priceNum: 2500,
@@ -19,11 +19,11 @@ const dishes = [
     pattern: "bg-[radial-gradient(circle_at_30%_70%,rgba(255,122,0,0.3),transparent_60%)]",
   },
   {
-    id: "sig-tacos-4-fromages",
-    name: "Tacos 4 Fromages",
+    id: "sig-tacos-tramway",
+    name: "Tacos Tramway — طاكوس ترامواي",
     subtitle: "Recette Exclusive",
-    price: "1800 DA",
-    priceNum: 1800,
+    price: "1600 DA",
+    priceNum: 1600,
     description:
       "Croustillant, fondant, inoubliable. Mélange parfait de 4 fromages, viande marinée et sauce fusion.",
     badge: { label: "Nouveau", icon: Sparkles },
@@ -34,7 +34,7 @@ const dishes = [
   },
   {
     id: "sig-americain-special",
-    name: "Américain Spécial",
+    name: "Sandwich Américain",
     subtitle: "Classique Légendaire",
     price: "450 DA",
     priceNum: 450,
