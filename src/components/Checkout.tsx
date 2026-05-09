@@ -188,10 +188,10 @@ export default function Checkout() {
 
                     <button
                       onClick={() => {
-                        if (orderId) {
-                          window.open(`/track?orderId=${orderId}`, "_blank");
-                        }
                         closeCheckout();
+                        if (orderId) {
+                          navigate(`/track-order?orderId=${orderId}`);
+                        }
                       }}
                       className="flex items-center gap-2 px-6 py-3 font-black text-sm uppercase tracking-wider transition-all"
                       style={{
