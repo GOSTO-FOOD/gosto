@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import DashboardPage from "./dashboard";
 
 type AuthState = "checking" | "login" | "authenticated";
+const configuredApiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
+
+function apiUrl(path: string) {
+  return `${configuredApiBaseUrl}${path}`;
+}
 
 function LoginPage({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState("");
@@ -15,10 +20,10 @@ function LoginPage({ onSuccess }: { onSuccess: () => void }) {
     setIsSubmitting(true);
     setError("");
     try {
-      const response = await fetch("/api/dashboard/login", {
+      const response = await fetch(apiUrl("/api/dashboard/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "same-origin",
+        credentials: configuredApiBaseUrl ? "include" : "same-origin",
         body: JSON.stringify({ password }),
       });
       if (!response.ok) {
@@ -95,8 +100,8 @@ export default function DashboardAccessGate() {
 
   const checkSession = async () => {
     try {
-      const response = await fetch("/api/dashboard/session", {
-        credentials: "same-origin",
+      const response = await fetch(apiUrl("/api/dashboard/session"), {
+        credentials: configuredApiBaseUrl ? "include" : "same-origin",
       });
       const data = (await response.json()) as { authenticated?: boolean };
       setState(data.authenticated ? "authenticated" : "login");
