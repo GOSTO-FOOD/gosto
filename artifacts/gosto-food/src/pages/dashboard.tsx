@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Check,
@@ -18,14 +17,8 @@ import {
   Utensils,
   X,
 } from "lucide-react";
-import {
-  getGetGostoMenuQueryKey,
-  useGetGostoMenu,
-  useUpdateGostoMenu,
-  type MenuCategory,
-  type MenuItem,
-  type MenuItemSize,
-} from "@workspace/api-client-react";
+import type { MenuCategory, MenuItem, MenuItemSize } from "@workspace/api-client-react";
+import { readGostoMenu, writeGostoMenu, type GostoMenuDocument } from "@/lib/jsonbin";
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 type NewItemInput = {
@@ -37,6 +30,43 @@ type NewItemInput = {
   popular: boolean;
   note: string;
 };
+
+
+function useJsonBinMenu() {
+  const [data, setData] = useState<GostoMenuDocument | undefined>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const load = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      setData(await readGostoMenu());
+    } catch {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  const save = async (categories: MenuCategory[]) => {
+    setIsSaving(true);
+    try {
+      const result = await writeGostoMenu(categories);
+      setData(result);
+      return result;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return { data, isLoading, isError, refetch: load, isSaving, save };
+}
 
 const slugify = (value: string) =>
   value
@@ -658,9 +688,7 @@ function CategorySection({
 }
 
 export default function DashboardPage({ onLogout }: { onLogout: () => void }) {
-  const queryClient = useQueryClient();
-  const menuQuery = useGetGostoMenu();
-  const updateMenu = useUpdateGostoMenu();
+  const menuQuery = useJsonBinMenu();
   const [draft, setDraft] = useState<MenuCategory[] | null>(null);
   const [savedSnapshot, setSavedSnapshot] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
@@ -806,29 +834,21 @@ export default function DashboardPage({ onLogout }: { onLogout: () => void }) {
     setSaveMessage("");
   };
 
-  const handleSave = () => {
-    if (!draft || !isDirty || updateMenu.isPending) return;
+  const handleSave = async () => {
+    if (!draft || !isDirty || menuQuery.isSaving) return;
     setSaveState("saving");
-    setSaveMessage("Envoi du menu complet en cours…");
-    updateMenu.mutate(
-      { data: { categories: draft } },
-      {
-        onSuccess: (result) => {
-          const nextDraft = cloneCategories(result.categories);
-          setDraft(nextDraft);
-          setSavedSnapshot(JSON.stringify(nextDraft));
-          setSaveState("saved");
-          setSaveMessage("Menu enregistré avec succès");
-          queryClient.invalidateQueries({
-            queryKey: getGetGostoMenuQueryKey(),
-          });
-        },
-        onError: () => {
-          setSaveState("error");
-          setSaveMessage("Enregistrement impossible. Vos changements sont conservés.");
-        },
-      },
-    );
+    setSaveMessage("Enregistrement dans JSONBin en cours…");
+    try {
+      const result = await menuQuery.save(draft);
+      const nextDraft = cloneCategories(result.categories);
+      setDraft(nextDraft);
+      setSavedSnapshot(JSON.stringify(nextDraft));
+      setSaveState("saved");
+      setSaveMessage("Menu enregistré avec succès");
+    } catch {
+      setSaveState("error");
+      setSaveMessage("Enregistrement impossible. Vérifiez la clé JSONBin.");
+    }
   };
 
   const isInitialLoading = menuQuery.isLoading && draft === null;
@@ -1139,7 +1159,7 @@ export default function DashboardPage({ onLogout }: { onLogout: () => void }) {
                 type="button"
                 data-testid="button-reset-menu"
                 onClick={handleReset}
-                disabled={!isDirty || updateMenu.isPending}
+                disabled={!isDirty || menuQuery.isSaving}
                 className="border border-white/[0.12] px-3 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/45 transition-colors hover:border-white/30 hover:text-white/75 disabled:cursor-not-allowed disabled:opacity-30"
               >
                 Annuler
@@ -1148,10 +1168,10 @@ export default function DashboardPage({ onLogout }: { onLogout: () => void }) {
                 type="button"
                 data-testid="button-save-menu"
                 onClick={handleSave}
-                disabled={!isDirty || updateMenu.isPending}
+                disabled={!isDirty || menuQuery.isSaving}
                 className="inline-flex flex-1 items-center justify-center gap-2 border border-[#ff7a00] bg-[#ff7a00] px-4 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.13em] text-[#1a0b0e] transition-all hover:bg-[#ff9838] disabled:cursor-not-allowed disabled:border-white/15 disabled:bg-white/10 disabled:text-white/35 sm:flex-none"
               >
-                {updateMenu.isPending ? (
+                {menuQuery.isSaving ? (
                   <Loader2 size={14} className="animate-spin" />
                 ) : (
                   <Save size={14} />
