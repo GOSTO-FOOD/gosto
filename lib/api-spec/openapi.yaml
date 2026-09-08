@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: gosto
+    description: GOSTO FOOD menu operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /gosto/menu:
+    get:
+      operationId: getGostoMenu
+      tags: [gosto]
+      summary: Get the current GOSTO FOOD menu
+      responses:
+        "200":
+          description: Current menu data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MenuDocument"
+        "502":
+          description: JSONBin is unavailable
+    put:
+      operationId: updateGostoMenu
+      tags: [gosto]
+      summary: Update GOSTO FOOD menu prices
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MenuDocumentInput"
+      responses:
+        "200":
+          description: Updated menu data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MenuDocument"
+        "400":
+          description: Invalid menu data
+        "502":
+          description: JSONBin is unavailable
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    MenuItemSize:
+      type: object
+      properties:
+        label:
+          type: string
+        price:
+          type: number
+      required: [label, price]
+    MenuItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        nameAr:
+          type: ["string", "null"]
+        price:
+          type: ["number", "null"]
+        sizes:
+          type: ["array", "null"]
+          items:
+            $ref: "#/components/schemas/MenuItemSize"
+        popular:
+          type: boolean
+        note:
+          type: ["string", "null"]
+      required: [id, name]
+    MenuCategory:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        nameAr:
+          type: string
+        icon:
+          type: string
+        accent:
+          type: string
+        glow:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/MenuItem"
+      required: [id, name, nameAr, icon, accent, glow, items]
+    MenuDocumentInput:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/MenuCategory"
+      required: [categories]
+    MenuDocument:
+      allOf:
+        - $ref: "#/components/schemas/MenuDocumentInput"
+        - type: object
+          properties:
+            binId:
+              type: string
+            updatedAt:
+              type: string
+          required: [binId]
+

@@ -1,43 +1,33 @@
 # GOSTO FOOD
 
-تطبيق ويب لطلب الطعام — مبني بـ React + Vite + Firebase.
+Restaurant ordering website and protected menu-control dashboard.
 
-## التقنيات المستخدمة
+## Workspace
 
-- React 19 + TypeScript
-- Vite
-- Tailwind CSS
-- Firebase (Firestore + Storage)
-- Framer Motion
-- shadcn/ui
+- Public website: `artifacts/gosto-food`
+- API server: `artifacts/api-server`
+- API contract and generated clients: `lib/api-spec`, `lib/api-zod`, `lib/api-client-react`
 
-## تشغيل المشروع محلياً
+## Run locally
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm --filter @workspace/api-server run dev
+pnpm --filter @workspace/gosto-food run dev
 ```
 
-## بناء للإنتاج
+The API server needs these secrets in the runtime environment:
 
-```bash
-npm run build
-```
+- `JSONBIN_MASTER_KEY`
+- `SESSION_SECRET`
+- `DASHBOARD_PASSWORD`
 
-## إعداد Firebase
+Never commit their values.
 
-البيانات موجودة مباشرة في `src/lib/firebase.ts`. يمكنك تغييرها بمشروع Firebase خاص بك.
+## Dashboard
 
-## هيكل المشروع
+Open `/dashboard` and enter the configured dashboard password. Menu changes are saved to JSONBin only after clicking **Enregistrer le menu**.
 
-```
-src/
-├── assets/          # الصور والملفات الثابتة
-├── components/      # مكونات الواجهة
-│   └── ui/          # مكونات shadcn/ui
-├── context/         # React Context (السلة)
-├── data/            # بيانات المنيو
-├── hooks/           # Custom hooks
-├── lib/             # Firebase وأدوات مساعدة
-└── pages/           # صفحات التطبيق
-```
+## Publishing
+
+The public homepage is a static published bundle and can be hosted on GitHub Pages. The dashboard and live price synchronization require the Express API server to remain hosted separately with the required secrets; GitHub Pages alone cannot run that server.
