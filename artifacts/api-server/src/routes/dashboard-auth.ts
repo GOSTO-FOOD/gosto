@@ -4,6 +4,7 @@ import { Router, type IRouter, type NextFunction, type Request, type Response } 
 const router: IRouter = Router();
 const SESSION_COOKIE = "gosto_dashboard_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 8;
+const usesCrossOriginFrontend = Boolean(process.env.GOSTO_FRONTEND_ORIGIN?.trim());
 
 function getSessionSecret() {
   const secret = process.env.SESSION_SECRET;
@@ -99,8 +100,10 @@ router.post("/dashboard/login", (request, response) => {
 
   response.setHeader(
     "Set-Cookie",
-    `${SESSION_COOKIE}=${createSessionToken()}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${SESSION_MAX_AGE_SECONDS}${
-      process.env.NODE_ENV === "production" ? "; Secure" : ""
+    `${SESSION_COOKIE}=${createSessionToken()}; Path=/; HttpOnly; SameSite=${
+      usesCrossOriginFrontend ? "None" : "Lax"
+    }; Max-Age=${SESSION_MAX_AGE_SECONDS}${
+      process.env.NODE_ENV === "production" || usesCrossOriginFrontend ? "; Secure" : ""
     }`,
   );
   response.json({ authenticated: true });
@@ -110,8 +113,10 @@ router.post("/dashboard/logout", (_request, response) => {
   response.setHeader("Cache-Control", "no-store");
   response.setHeader(
     "Set-Cookie",
-    `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT${
-      process.env.NODE_ENV === "production" ? "; Secure" : ""
+    `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=${
+      usesCrossOriginFrontend ? "None" : "Lax"
+    }; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT${
+      process.env.NODE_ENV === "production" || usesCrossOriginFrontend ? "; Secure" : ""
     }`,
   );
   response.json({ authenticated: false });
