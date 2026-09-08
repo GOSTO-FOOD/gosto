@@ -1,9 +1,9 @@
 import { createRoot } from "react-dom/client";
+import { readGostoMenu } from "./lib/jsonbin";
 
 const root = document.getElementById("root")!;
 const basePath = import.meta.env.BASE_URL;
 const normalizedBasePath = basePath.replace(/\/+$/, "") || "/";
-const configuredApiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
 const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
 const path =
   normalizedBasePath !== "/" && pathname.startsWith(normalizedBasePath)
@@ -69,7 +69,7 @@ function syncPublishedMenuPrices(menu: PublishedMenu) {
 
 function loadPublishedMenuPriceSync() {
   syncPublishedOpeningHours();
-  fetch(`${configuredApiBaseUrl}${configuredApiBaseUrl ? "" : basePath}api/gosto/menu`)
+  readGostoMenu()
     .then((response) => (response.ok ? response.json() : null))
     .then((menu: PublishedMenu | null) => {
       if (!menu) return;
