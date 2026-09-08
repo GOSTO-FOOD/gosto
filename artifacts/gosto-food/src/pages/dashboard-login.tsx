@@ -2,7 +2,7 @@ import { useState } from "react";
 import DashboardPage from "./dashboard";
 
 type AuthState = "login" | "authenticated";
-const STATIC_DASHBOARD_PASSWORD = "GOSTO-FOOD-2026";
+const STATIC_DASHBOARD_PASSWORD = "ZAKI30300";
 function LoginPage({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
