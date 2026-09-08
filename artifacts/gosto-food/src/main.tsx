@@ -108,9 +108,10 @@ if (path === "/dashboard") {
   const originalUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   const normalizePublishedRoute =
     normalizedBasePath !== "/" && path === "/";
+  const nativeReplaceState = window.history.replaceState.bind(window.history);
 
   if (normalizePublishedRoute) {
-    window.history.replaceState(window.history.state, "", "/");
+    nativeReplaceState(window.history.state, "", "/");
   }
 
   publishedScript.addEventListener(
@@ -119,7 +120,7 @@ if (path === "/dashboard") {
       loadPublishedMenuPriceSync();
       if (normalizePublishedRoute) {
         window.setTimeout(() => {
-          window.history.replaceState(window.history.state, "", originalUrl);
+          nativeReplaceState(window.history.state, "", originalUrl);
         }, 500);
       }
     },
