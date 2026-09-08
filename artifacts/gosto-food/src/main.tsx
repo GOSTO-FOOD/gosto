@@ -13,7 +13,7 @@ const path =
 type PublishedMenuItem = {
   name: string;
   price?: number | null;
-  sizes?: Array<{ price: number }>;
+  sizes?: Array<{ price: number }> | null;
 };
 
 type PublishedMenu = {
