@@ -5,6 +5,7 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
+const configuredFrontendOrigin = process.env.GOSTO_FRONTEND_ORIGIN?.trim();
 
 app.use(
   pinoHttp({
@@ -25,7 +26,12 @@ app.use(
     },
   }),
 );
-app.use(cors());
+app.use(
+  cors({
+    origin: configuredFrontendOrigin || true,
+    credentials: Boolean(configuredFrontendOrigin),
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
