@@ -70,8 +70,7 @@ function syncPublishedMenuPrices(menu: PublishedMenu) {
 function loadPublishedMenuPriceSync() {
   syncPublishedOpeningHours();
   readGostoMenu()
-    .then((response) => (response.ok ? response.json() : null))
-    .then((menu: PublishedMenu | null) => {
+    .then((menu: PublishedMenu) => {
       if (!menu) return;
       let scheduled = false;
       const sync = () => {
