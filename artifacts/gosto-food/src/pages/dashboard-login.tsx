@@ -1,42 +1,29 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DashboardPage from "./dashboard";
 
-type AuthState = "checking" | "login" | "authenticated";
-const configuredApiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
-
-function apiUrl(path: string) {
-  return `${configuredApiBaseUrl}${path}`;
-}
-
+type AuthState = "login" | "authenticated";
+const STATIC_DASHBOARD_PASSWORD = "GOSTO-FOOD-2026";
 function LoginPage({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!password || isSubmitting) return;
 
     setIsSubmitting(true);
     setError("");
-    try {
-      const response = await fetch(apiUrl("/api/dashboard/login"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: configuredApiBaseUrl ? "include" : "same-origin",
-        body: JSON.stringify({ password }),
-      });
-      if (!response.ok) {
-        setError(response.status === 401 ? "كلمة السر غير صحيحة" : "تعذر تسجيل الدخول");
-        return;
-      }
-      setPassword("");
-      onSuccess();
-    } catch {
-      setError("تعذر الاتصال بالخادم");
-    } finally {
+
+    if (password !== STATIC_DASHBOARD_PASSWORD) {
+      setError("كلمة السر غير صحيحة");
       setIsSubmitting(false);
+      return;
     }
+
+    setPassword("");
+    setIsSubmitting(false);
+    onSuccess();
   };
 
   return (
@@ -96,31 +83,7 @@ function LoginPage({ onSuccess }: { onSuccess: () => void }) {
 }
 
 export default function DashboardAccessGate() {
-  const [state, setState] = useState<AuthState>("checking");
-
-  const checkSession = async () => {
-    try {
-      const response = await fetch(apiUrl("/api/dashboard/session"), {
-        credentials: configuredApiBaseUrl ? "include" : "same-origin",
-      });
-      const data = (await response.json()) as { authenticated?: boolean };
-      setState(data.authenticated ? "authenticated" : "login");
-    } catch {
-      setState("login");
-    }
-  };
-
-  useEffect(() => {
-    void checkSession();
-  }, []);
-
-  if (state === "checking") {
-    return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-[#050505] text-[#39ff14]">
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em]">Vérification…</span>
-      </div>
-    );
-  }
+  const [state, setState] = useState<AuthState>("login");
 
   if (state === "login") {
     return <LoginPage onSuccess={() => setState("authenticated")} />;
