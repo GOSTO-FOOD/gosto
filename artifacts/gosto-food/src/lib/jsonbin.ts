@@ -3,7 +3,7 @@ import type { MenuCategory } from "@workspace/api-client-react";
 // Public demo configuration: replace the placeholder with your JSONBin key.
 // Warning: any key placed here is visible to every visitor of the website.
 export const JSONBIN_BIN_ID = "6a9e1eed2afc621060aad c295".replace(" ", "");
-export const JSONBIN_MASTER_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXX";
+export const JSONBIN_MASTER_KEY = "$2a$10$oDVMOcqAXXfu8vMrm0IFWuz2DNYxzcqwhHFwUzMOt5QC7CMVbpbPi";
 
 const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
