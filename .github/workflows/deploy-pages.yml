@@ -41,7 +41,9 @@ jobs:
           BASE_PATH: /gosto/
 
       - name: Add direct dashboard entry point
-        run: cp artifacts/gosto-food/dist/public/index.html artifacts/gosto-food/dist/public/dashboard/index.html
+        run: |
+          mkdir -p artifacts/gosto-food/dist/public/dashboard
+          cp artifacts/gosto-food/dist/public/index.html artifacts/gosto-food/dist/public/dashboard/index.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
