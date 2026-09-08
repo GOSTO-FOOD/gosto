@@ -120,7 +120,7 @@ if (path === "/dashboard") {
       if (normalizePublishedRoute) {
         window.setTimeout(() => {
           window.history.replaceState(window.history.state, "", originalUrl);
-        }, 0);
+        }, 500);
       }
     },
     { once: true },
