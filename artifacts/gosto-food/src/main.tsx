@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 const root = document.getElementById("root")!;
 const basePath = import.meta.env.BASE_URL;
 const normalizedBasePath = basePath.replace(/\/+$/, "") || "/";
+const configuredApiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/+$/, "");
 const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
 const path =
   normalizedBasePath !== "/" && pathname.startsWith(normalizedBasePath)
@@ -68,7 +69,7 @@ function syncPublishedMenuPrices(menu: PublishedMenu) {
 
 function loadPublishedMenuPriceSync() {
   syncPublishedOpeningHours();
-  fetch(`${basePath}api/gosto/menu`)
+  fetch(`${configuredApiBaseUrl}${configuredApiBaseUrl ? "" : basePath}api/gosto/menu`)
     .then((response) => (response.ok ? response.json() : null))
     .then((menu: PublishedMenu | null) => {
       if (!menu) return;
@@ -92,6 +93,39 @@ function loadPublishedMenuPriceSync() {
     });
 }
 
+function installPublishedAssetPathShim() {
+  const imageSrcDescriptor = Object.getOwnPropertyDescriptor(
+    HTMLImageElement.prototype,
+    "src",
+  );
+  const nativeSetAttribute = HTMLImageElement.prototype.setAttribute;
+
+  if (imageSrcDescriptor?.set && imageSrcDescriptor.get) {
+    Object.defineProperty(HTMLImageElement.prototype, "src", {
+      configurable: imageSrcDescriptor.configurable,
+      enumerable: imageSrcDescriptor.enumerable,
+      get: imageSrcDescriptor.get,
+      set(value: string) {
+        const nextValue =
+          value.startsWith("/assets/") && normalizedBasePath !== "/"
+            ? `${basePath}${value.slice(1)}`
+            : value;
+        imageSrcDescriptor.set?.call(this, nextValue);
+      },
+    });
+  }
+
+  HTMLImageElement.prototype.setAttribute = function (name, value) {
+    const nextValue =
+      name.toLowerCase() === "src" &&
+      value.startsWith("/assets/") &&
+      normalizedBasePath !== "/"
+        ? `${basePath}${value.slice(1)}`
+        : value;
+    nativeSetAttribute.call(this, name, nextValue);
+  };
+}
+
 if (path === "/dashboard") {
   Promise.all([import("./index.css"), import("./App")]).then(([, { default: App }]) => {
     createRoot(root).render(<App />);
@@ -102,6 +136,7 @@ if (path === "/dashboard") {
   publishedStyles.href = `${basePath}assets/index-B8a4PXzM.css`;
   document.head.appendChild(publishedStyles);
 
+  installPublishedAssetPathShim();
   const publishedScript = document.createElement("script");
   publishedScript.type = "module";
   publishedScript.src = `${basePath}assets/index-Mczsru17.js`;
