@@ -105,6 +105,25 @@ if (path === "/dashboard") {
   const publishedScript = document.createElement("script");
   publishedScript.type = "module";
   publishedScript.src = `${basePath}assets/index-Mczsru17.js`;
-  publishedScript.addEventListener("load", loadPublishedMenuPriceSync, { once: true });
+  const originalUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  const normalizePublishedRoute =
+    normalizedBasePath !== "/" && path === "/";
+
+  if (normalizePublishedRoute) {
+    window.history.replaceState(window.history.state, "", "/");
+  }
+
+  publishedScript.addEventListener(
+    "load",
+    () => {
+      loadPublishedMenuPriceSync();
+      if (normalizePublishedRoute) {
+        window.setTimeout(() => {
+          window.history.replaceState(window.history.state, "", originalUrl);
+        }, 0);
+      }
+    },
+    { once: true },
+  );
   document.body.appendChild(publishedScript);
 }
