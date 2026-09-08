@@ -9,6 +9,7 @@ const JSONBIN_URL = "https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID;
 
 export type GostoMenuDocument = {
   categories: MenuCategory[];
+  updatedAt?: string;
 };
 
 export async function readGostoMenu(): Promise<GostoMenuDocument> {
